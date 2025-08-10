@@ -1,0 +1,1 @@
+v1.0.0 - Initial D3 release: Google style compliance, JDB debugging, accessibility labels, and JUnit tests.

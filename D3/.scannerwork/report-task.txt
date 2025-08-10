@@ -1,0 +1,7 @@
+organization=deepkondal
+projectKey=Eternity
+serverUrl=https://sonarcloud.io
+serverVersion=8.0.0.66037
+dashboardUrl=https://sonarcloud.io/dashboard?id=Eternity
+ceTaskId=AZiVlb1PSD3JaSsEd6LZ
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZiVlb1PSD3JaSsEd6LZ
