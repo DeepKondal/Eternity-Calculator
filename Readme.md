@@ -95,7 +95,7 @@ jdb -classpath out SinhGui
 2. Run scanner from `D3/`:
    ```powershell
    Remove-Item -Recurse -Force .scannerwork -ErrorAction SilentlyContinue
-   C:\sonarscannerin\sonar-scanner.bat
+   'path_to_solar_scanner_file'\sonar-scanner.bat
    ```
 3. Open your SonarCloud project dashboard and capture screenshots (overview + issues list).
 
