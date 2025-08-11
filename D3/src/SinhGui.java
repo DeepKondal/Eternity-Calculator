@@ -1,5 +1,6 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -7,56 +8,64 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 /**
- * Graphical User Interface for computing sinh(x) using SinhCalculator.
+ * Simple Swing GUI for computing sinh(x) using the Taylor-series implementation.
+ * <p>Design goals: clarity, accessibility, and no IDE dependency. Title shows the app version.</p>
  */
 public class SinhGui extends JFrame {
+
+  private static final long serialVersionUID = 1L;
+  private static final String VERSION = "v1.0.0";
 
   private JTextField inputField;
   private JLabel resultLabel;
 
-  /**
-   * Constructs the SinhGui window.
-   */
+  /** Constructs the window, lays out widgets, and wires up actions. */
   public SinhGui() {
-    setTitle("Eternity Calculator - sinh(x) v1.0.0");
-    setSize(400, 200);
+    setTitle("Eternity Calculator - sinh(x) " + VERSION);
+    setSize(420, 220);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(null);
     setResizable(true);
 
     JLabel prompt = new JLabel("Enter value for x:");
-    prompt.setBounds(30, 30, 120, 25);
-    prompt.getAccessibleContext()
-        .setAccessibleDescription("Label prompting user to enter a value for x");
+    prompt.setBounds(30, 30, 160, 25);
     add(prompt);
 
     inputField = new JTextField();
-    inputField.setBounds(160, 30, 150, 25);
-    inputField.getAccessibleContext().setAccessibleDescription(
-        "Text field to enter the x value for sinh calculation");
+    inputField.setBounds(180, 30, 160, 25);
     add(inputField);
 
     JButton computeButton = new JButton("Compute sinh(x)");
-    computeButton.setBounds(100, 70, 180, 30);
-    computeButton.getAccessibleContext()
-        .setAccessibleDescription("Button to compute the sinh(x) value");
+    computeButton.setBounds(120, 70, 180, 30);
     add(computeButton);
 
     resultLabel = new JLabel("Result: ");
-    resultLabel.setBounds(30, 120, 320, 25);
-    resultLabel.getAccessibleContext()
-        .setAccessibleDescription("Displays the computed sinh(x) result");
+    resultLabel.setBounds(30, 120, 360, 25);
     add(resultLabel);
 
+    // Accessibility & usability
+    prompt.setLabelFor(inputField);
+    inputField.setToolTipText("Enter a real number between -100 and 100.");
+    computeButton.setToolTipText("Compute sinh(x) for the current input.");
+    computeButton.setMnemonic(KeyEvent.VK_C);
+    getRootPane().setDefaultButton(computeButton);
+
+    prompt.getAccessibleContext().setAccessibleDescription("Label for input x.");
+    inputField.getAccessibleContext()
+        .setAccessibleDescription("Text field to enter x, range -100 to 100.");
+    computeButton.getAccessibleContext()
+        .setAccessibleDescription("Press to compute the hyperbolic sine of x.");
+    resultLabel.getAccessibleContext()
+        .setAccessibleDescription("Displays the computed result or an error message.");
+
+    // Action: compute on click
     computeButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         try {
           double x = parseInput(inputField.getText());
           double result = SinhCalculator.computeSinh(x);
-          resultLabel.setText(
-              String.format("Result: sinh(%.6f) = %.6f", x, result)
-          );
+          resultLabel.setText(String.format("Result: sinh(%.6f) = %.6f", x, result));
         } catch (InvalidInputException ex) {
           resultLabel.setText("Error: " + ex.getMessage());
         }
@@ -65,11 +74,11 @@ public class SinhGui extends JFrame {
   }
 
   /**
-   * Parses and validates the input.
+   * Parses and validates the user input.
    *
-   * @param text the user input as a string
-   * @return parsed double value
-   * @throws InvalidInputException if input is not valid or out of range
+   * @param text the raw text from the input field
+   * @return the parsed double value
+   * @throws InvalidInputException if the text is not a number or out of the accepted range
    */
   private double parseInput(String text) throws InvalidInputException {
     try {
@@ -78,15 +87,15 @@ public class SinhGui extends JFrame {
         throw new InvalidInputException("Input out of range [-100, 100]");
       }
       return val;
-    } catch (NumberFormatException e) {
+    } catch (NumberFormatException ex) {
       throw new InvalidInputException("Please enter a valid number");
     }
   }
 
   /**
-   * Main method to launch the application.
+   * Application entry point.
    *
-   * @param args command-line arguments
+   * @param args ignored
    */
   public static void main(String[] args) {
     SwingUtilities.invokeLater(() -> new SinhGui().setVisible(true));
